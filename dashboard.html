@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PragueBot — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #262624;
+  --surface:  #1e1e1c;
+  --panel:    #2e2e2b;
+  --panel2:   #333330;
+  --border:   #3a3a36;
+  --border2:  #444440;
+  --accent:   #c8f05a;
+  --accent2:  #5af0c8;
+  --accent3:  #f0a85a;
+  --text:     #e8e6df;
+  --text2:    #b0ae a7;
+  --muted:    #6a6a62;
+  --danger:   #f05a5a;
+  --success:  #5af07a;
+  --mono:     'Space Mono', monospace;
+  --sans:     'Syne', sans-serif;
+  --sidebar-w: 64px;
+  --left-w:   340px;
+  --right-w:  320px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+/* ── SIDEBAR NAV ─────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  flex-shrink: 0;
+  z-index: 100;
+}
+.logo-mark {
+  width: 38px; height: 38px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 28px;
+  box-shadow: 0 0 20px rgba(200,240,90,0.3);
+}
+.logo-mark svg { width: 20px; height: 20px; }
+
+.nav-items { flex: 1; display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0 8px; }
+.nav-item {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  color: var(--muted);
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--panel); color: var(--text); }
+.nav-item.active { background: rgba(200,240,90,0.12); color: var(--accent); border-color: rgba(200,240,90,0.2); }
+.nav-item svg { width: 20px; height: 20px; }
+.nav-tooltip {
+  position: absolute; left: 58px;
+  background: var(--panel2); color: var(--text);
+  padding: 5px 10px; border-radius: 6px;
+  font-family: var(--mono); font-size: 11px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity 0.15s;
+  border: 1px solid var(--border2);
+  z-index: 200;
+}
+.nav-item:hover .nav-tooltip { opacity: 1; }
+
+.sidebar-bottom { padding: 8px; }
+.avatar {
+  width: 38px; height: 38px;
+  background: var(--panel2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-weight: 700; font-size: 14px;
+  color: var(--accent);
+  border: 1px solid var(--border2);
+  transition: all 0.2s;
+}
+.avatar:hover { border-color: var(--accent); }
+
+/* ── LEFT PANEL ──────────────────────────── */
+.left-panel {
+  width: var(--left-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.panel-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--surface);
+  z-index: 10;
+}
+.panel-title {
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text);
+}
+.panel-sub {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); margin-top: 3px;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.stat-box {
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+}
+.stat-val {
+  font-family: var(--mono); font-size: 20px;
+  font-weight: 700; color: var(--accent);
+  line-height: 1;
+}
+.stat-lbl {
+  font-size: 10px; color: var(--muted);
+  margin-top: 4px; font-family: var(--mono);
+}
+
+/* Settings sections */
+.settings-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.sec-title {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.sec-title::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--border);
+}
+
+/* Checkboxes */
+.check-group { display: flex; flex-direction: column; gap: 6px; }
+.check-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+}
+.check-item:hover { background: var(--panel); border-color: var(--border); }
+.check-item input[type="checkbox"] { display: none; }
+.check-box {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border2);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.check-item input:checked ~ .check-label { color: var(--text); }
+.check-item input:checked ~ * .check-box,
+.check-item.checked .check-box {
+  background: var(--accent); border-color: var(--accent);
+}
+.check-item.checked .check-box::after {
+  content: '✓'; font-size: 10px; color: #1a1a18; font-weight: 900;
+}
+.check-label { font-size: 12px; color: var(--text); }
+.check-badge {
+  margin-left: auto;
+  font-family: var(--mono); font-size: 9px;
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--panel2); color: var(--muted);
+}
+.check-badge.live { background: rgba(90,240,122,0.1); color: var(--success); }
+.check-badge.beta { background: rgba(240,168,90,0.1); color: var(--accent3); }
+
+/* Category selector */
+.category-grid {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.cat-tag {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-family: var(--mono); font-size: 10px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.cat-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,90,0.05); }
+.cat-tag.selected { background: rgba(200,240,90,0.12); border-color: var(--accent); color: var(--accent); }
+
+/* Batch size */
+.batch-options { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+.batch-btn {
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--muted);
+  font-family: var(--mono); font-size: 10px;
+  cursor: pointer; text-align: center;
+  transition: all 0.15s;
+}
+.batch-btn:hover { border-color: var(--accent); color: var(--accent); }
+.batch-btn.active { background: rgba(200,240,90,0.12); border-color: var(--accent); color: var(--accent); }
+
+/* Run button */
+.run-area { padding: 14px 16px 18px; }
+.btn-run {
+  width: 100%;
+  background: var(--accent);
+  color: #1a1a18;
+  border: none; border-radius: 10px;
+  padding: 14px; cursor: pointer;
+  font-family: var(--sans); font-size: 14px; font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,240,90,0.25); }
+.btn-run:active { transform: translateY(0); }
+.btn-run.running { background: var(--panel2); color: var(--accent); border: 1px solid var(--accent); }
+.btn-run.running .run-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%; background: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+/* Progress */
+.progress-wrap {
+  margin-top: 10px;
+  display: none;
+}
+.progress-wrap.show { display: block; }
+.progress-bar-bg {
+  height: 4px; background: var(--border);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--accent);
+  border-radius: 2px; width: 0%;
+  transition: width 0.3s ease;
+}
+.progress-label {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); margin-top: 6px;
+  text-align: center;
+}
+
+/* ── CENTER: MAP ─────────────────────────── */
+.center-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.map-header {
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.map-title { font-size: 13px; font-weight: 700; }
+.map-pill {
+  font-family: var(--mono); font-size: 9px;
+  padding: 3px 8px; border-radius: 4px;
+  background: rgba(200,240,90,0.1); color: var(--accent);
+  border: 1px solid rgba(200,240,90,0.2);
+}
+.map-frame {
+  flex: 1;
+  position: relative;
+}
+.map-frame iframe {
+  width: 100%; height: 100%;
+  border: none; display: block;
+}
+.map-overlay {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(38,38,36,0.3) 0%, transparent 40%);
+}
+
+/* ── RIGHT PANEL ─────────────────────────── */
+.right-panel {
+  width: var(--right-w);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Filter */
+.filter-area {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.filter-title {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.search-input-wrap {
+  position: relative; margin-bottom: 10px;
+}
+.search-input-wrap svg {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; color: var(--muted);
+}
+.search-input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px 9px 32px;
+  color: var(--text); font-family: var(--mono); font-size: 11px;
+  outline: none; transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--muted); }
+
+.filter-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  font-family: var(--mono); font-size: 9px;
+  padding: 4px 8px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.chip:hover { border-color: var(--accent2); color: var(--accent2); }
+.chip.active { background: rgba(90,240,200,0.1); border-color: var(--accent2); color: var(--accent2); }
+.chip.all { border-color: var(--accent); color: var(--accent); background: rgba(200,240,90,0.08); }
+
+/* DB Table */
+.db-area { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.db-header-row {
+  display: grid; grid-template-columns: 1fr 90px 80px;
+  padding: 8px 16px;
+  font-family: var(--mono); font-size: 9px;
+  color: var(--muted); letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--surface); z-index: 5;
+}
+.db-row {
+  display: grid; grid-template-columns: 1fr 90px 80px;
+  padding: 9px 16px;
+  border-bottom: 1px solid rgba(58,58,54,0.5);
+  transition: background 0.15s;
+  cursor: pointer;
+  animation: rowIn 0.3s ease both;
+}
+@keyframes rowIn {
+  from { opacity:0; transform: translateX(10px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+.db-row:hover { background: var(--panel); }
+.row-name {
+  font-size: 12px; font-weight: 600;
+  color: var(--text); overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.row-sub {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--muted); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.row-cat {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--accent2);
+  display: flex; align-items: center;
+}
+.row-status {
+  display: flex; align-items: center; justify-content: flex-end;
+}
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%; background: var(--success);
+  margin-right: 5px;
+}
+.status-dot.no { background: var(--muted); }
+.status-txt { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+
+/* Export btn */
+.export-bar {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+.btn-export {
+  flex: 1; padding: 9px;
+  border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--panel); color: var(--text);
+  font-family: var(--mono); font-size: 10px;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.btn-export:hover { border-color: var(--accent); color: var(--accent); }
+.btn-export svg { width: 12px; height: 12px; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--panel2); color: var(--text);
+  border: 1px solid var(--border2);
+  padding: 10px 20px; border-radius: 10px;
+  font-family: var(--mono); font-size: 12px;
+  opacity: 0; transition: all 0.3s;
+  pointer-events: none; z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(90,240,122,0.3); color: var(--success); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a18" stroke-width="2.5" stroke-linecap="round">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+      <circle cx="12" cy="9" r="2.5"/>
+    </svg>
+  </div>
+  <div class="nav-items">
+    <div class="nav-item active" onclick="navigate('maps')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+      <span class="nav-tooltip">Google Maps</span>
+    </div>
+    <div class="nav-item" onclick="navigate('db')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      <span class="nav-tooltip">База данных</span>
+    </div>
+    <div class="nav-item" onclick="navigate('stats')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span class="nav-tooltip">Статистика</span>
+    </div>
+    <div class="nav-item" onclick="navigate('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      <span class="nav-tooltip">Настройки</span>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="avatar" onclick="logout()" title="Выйти">A</div>
+  </div>
+</nav>
+
+<!-- LEFT PANEL: Settings -->
+<div class="left-panel">
+  <div class="panel-header">
+    <div class="panel-title">Настройки сбора</div>
+    <div class="panel-sub">Конфигурация парсера</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-box">
+      <div class="stat-val" id="totalCount">0</div>
+      <div class="stat-lbl">Контактов собрано</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="catCount">0</div>
+      <div class="stat-lbl">Категорий охвачено</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="emailCount">0</div>
+      <div class="stat-lbl">С email</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="phoneCount">0</div>
+      <div class="stat-lbl">С телефоном</div>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="settings-section">
+    <div class="sec-title">Источники данных</div>
+    <div class="check-group" id="sourceGroup">
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked name="source" value="gmaps">
+        <div class="check-box">✓</div>
+        <span class="check-label">Google Maps</span>
+        <span class="check-badge live">live</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked name="source" value="firmy">
+        <div class="check-box">✓</div>
+        <span class="check-label">Firmy.cz / Zlaté stránky</span>
+        <span class="check-badge live">live</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox" name="source" value="linkedin">
+        <div class="check-box"></div>
+        <span class="check-label">LinkedIn</span>
+        <span class="check-badge beta">beta</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked name="source" value="web">
+        <div class="check-box">✓</div>
+        <span class="check-label">Веб-скрапинг сайтов</span>
+        <span class="check-badge live">live</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox" name="source" value="facebook">
+        <div class="check-box"></div>
+        <span class="check-label">Facebook</span>
+        <span class="check-badge beta">beta</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Fields to collect -->
+  <div class="settings-section">
+    <div class="sec-title">Что собирать</div>
+    <div class="check-group">
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked><div class="check-box">✓</div>
+        <span class="check-label">Название фирмы</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked><div class="check-box">✓</div>
+        <span class="check-label">Телефон</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked><div class="check-box">✓</div>
+        <span class="check-label">Email</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked><div class="check-box">✓</div>
+        <span class="check-label">Адрес / Сайт</span>
+      </label>
+      <label class="check-item checked" onclick="toggleCheck(this)">
+        <input type="checkbox" checked><div class="check-box">✓</div>
+        <span class="check-label">Сфера деятельности</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><div class="check-box"></div>
+        <span class="check-label">Рейтинг Google</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><div class="check-box"></div>
+        <span class="check-label">Количество отзывов</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><div class="check-box"></div>
+        <span class="check-label">Часы работы</span>
+      </label>
+      <label class="check-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><div class="check-box"></div>
+        <span class="check-label">Ссылка на соцсети</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Category -->
+  <div class="settings-section">
+    <div class="sec-title">Категория бизнеса</div>
+    <div class="category-grid" id="catGrid">
+      <div class="cat-tag selected" onclick="toggleCat(this)">Рестораны</div>
+      <div class="cat-tag" onclick="toggleCat(this)">IT / Tech</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Строительство</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Маркетинг</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Бухгалтерия</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Недвижимость</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Юридические</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Транспорт</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Медицина</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Отели</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Фитнес</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Авто</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Красота</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Образование</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Туризм</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Финансы</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Страхование</div>
+      <div class="cat-tag" onclick="toggleCat(this)">Логистика</div>
+    </div>
+  </div>
+
+  <!-- Batch size -->
+  <div class="settings-section">
+    <div class="sec-title">Контактов за итерацию</div>
+    <div class="batch-options">
+      <div class="batch-btn active" onclick="setBatch(this,'1-10')">1–10</div>
+      <div class="batch-btn" onclick="setBatch(this,'11-20')">11–20</div>
+      <div class="batch-btn" onclick="setBatch(this,'21-50')">21–50</div>
+      <div class="batch-btn" onclick="setBatch(this,'51-100')">51–100</div>
+    </div>
+  </div>
+
+  <!-- Run -->
+  <div class="run-area">
+    <button class="btn-run" id="runBtn" onclick="startRun()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Запустить сбор
+    </button>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">Инициализация...</div>
+    </div>
+  </div>
+</div>
+
+<!-- CENTER: Map -->
+<div class="center-area">
+  <div class="map-header">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+    <span class="map-title">Google Maps — Praha</span>
+    <span class="map-pill">🟢 Live</span>
+  </div>
+  <div class="map-frame">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d81969.04!2d14.3357!3d50.0755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b939c0970798b%3A0x400af0f6614b1b0!2sPraha%2C+Czechia!5e0!3m2!1sen!2s!4v1"
+      allowfullscreen loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    <div class="map-overlay"></div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL: Database -->
+<div class="right-panel">
+  <div class="panel-header">
+    <div class="panel-title">База данных</div>
+    <div class="panel-sub" id="dbCountLabel">0 записей</div>
+  </div>
+
+  <div class="filter-area">
+    <div class="filter-title">Фильтр</div>
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Поиск по названию..." oninput="filterDB()">
+    </div>
+    <div class="filter-chips" id="filterChips">
+      <div class="chip all active" onclick="filterCat('all', this)">Все</div>
+      <div class="chip" onclick="filterCat('Рестораны', this)">Рестораны</div>
+      <div class="chip" onclick="filterCat('IT / Tech', this)">IT</div>
+      <div class="chip" onclick="filterCat('Недвижимость', this)">Риелторы</div>
+      <div class="chip" onclick="filterCat('Медицина', this)">Медицина</div>
+      <div class="chip" onclick="filterCat('Строительство', this)">Стройка</div>
+      <div class="chip" onclick="filterCat('Маркетинг', this)">Маркетинг</div>
+    </div>
+  </div>
+
+  <div class="db-header-row">
+    <div>Компания</div>
+    <div>Категория</div>
+    <div style="text-align:right">Данные</div>
+  </div>
+
+  <div class="db-area" id="dbArea">
+    <!-- Rows injected by JS -->
+  </div>
+
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportCSV()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      CSV
+    </button>
+    <button class="btn-export" onclick="exportJSON()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      JSON
+    </button>
+    <button class="btn-export" onclick="clearDB()" style="flex:0;padding:9px 12px;color:var(--danger)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH CHECK ──────────────────────────────────────────
+if (!sessionStorage.getItem('pb_auth')) {
+  window.location.href = 'login.html';
+}
+
+// ── STATE ───────────────────────────────────────────────
+let db = JSON.parse(localStorage.getItem('pb_db') || '[]');
+let activeFilter = 'all';
+let isRunning = false;
+let batchSize = '1-10';
+const DEMO_COMPANIES = [
+  {name:"Café Savoy", cat:"Рестораны", phone:"+420 257 311 562", email:"info@cafesavoy.cz", source:"Google Maps"},
+  {name:"Avast Software", cat:"IT / Tech", phone:"+420 274 005 777", email:"pr@avast.com", source:"Google Maps"},
+  {name:"Rohlík.cz", cat:"IT / Tech", phone:"+420 800 300 000", email:"info@rohlik.cz", source:"Firmy.cz"},
+  {name:"Lokál Dlouhááá", cat:"Рестораны", phone:"+420 222 316 265", email:"dlouha@ambi.cz", source:"Google Maps"},
+  {name:"Hotel Aria", cat:"Отели", phone:"+420 225 334 111", email:"stay@aria.cz", source:"Google Maps"},
+  {name:"JUDr. Petr Svoboda", cat:"Юридические", phone:"+420 224 810 440", email:"office@ak-novak.cz", source:"Firmy.cz"},
+  {name:"Studio Hits Gym", cat:"Фитнес", phone:"+420 731 456 789", email:"gym@studiohits.cz", source:"Google Maps"},
+  {name:"Reality Centrum Praha", cat:"Недвижимость", phone:"+420 246 810 123", email:"info@reality-centrum.cz", source:"Firmy.cz"},
+  {name:"Stavby Praha a.s.", cat:"Строительство", phone:"+420 602 555 777", email:null, source:"Google Maps"},
+  {name:"Digital Marketing CZ", cat:"Маркетинг", phone:"+420 731 888 999", email:"hello@dmcz.cz", source:"Firmy.cz"},
+];
+
+// ── INIT ────────────────────────────────────────────────
+window.onload = () => {
+  renderDB();
+  updateStats();
+};
+
+// ── TOGGLE CHECKBOX ─────────────────────────────────────
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const cb = el.querySelector('input');
+  const box = el.querySelector('.check-box');
+  if (el.classList.contains('checked')) {
+    cb.checked = true; box.textContent = '✓';
+  } else {
+    cb.checked = false; box.textContent = '';
+  }
+}
+
+// ── TOGGLE CATEGORY TAG ─────────────────────────────────
+function toggleCat(el) { el.classList.toggle('selected'); }
+
+// ── BATCH SIZE ──────────────────────────────────────────
+function setBatch(el, val) {
+  document.querySelectorAll('.batch-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  batchSize = val;
+}
+
+// ── RUN ─────────────────────────────────────────────────
+function startRun() {
+  if (isRunning) return;
+  const selected = [...document.querySelectorAll('.cat-tag.selected')].map(t => t.textContent);
+  if (!selected.length) { showToast('⚠ Выберите хотя бы одну категорию'); return; }
+
+  isRunning = true;
+  const btn = document.getElementById('runBtn');
+  btn.classList.add('running');
+  btn.innerHTML = '<span class="run-dot"></span> Сбор идёт...';
+
+  const wrap = document.getElementById('progressWrap');
+  wrap.classList.add('show');
+
+  const max = parseInt(batchSize.split('-')[1]);
+  let progress = 0;
+  const steps = [
+    'Подключение к источникам...',
+    'Открытие Google Maps...',
+    'Поиск компаний...',
+    'Извлечение контактов...',
+    'Поиск email на сайтах...',
+    'Дедупликация записей...',
+    'Сохранение в базу данных...',
+    'Готово ✓',
+  ];
+  let stepI = 0;
+
+  const interval = setInterval(() => {
+    progress += Math.random() * 18 + 5;
+    if (progress >= 100) { progress = 100; clearInterval(interval); finishRun(selected, max); }
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressLabel').textContent = steps[Math.min(stepI++, steps.length-1)];
+  }, 600);
+}
+
+function finishRun(categories, max) {
+  const count = Math.min(max, Math.floor(Math.random() * (max * 0.4)) + Math.ceil(max * 0.6));
+  const toAdd = DEMO_COMPANIES
+    .filter(c => Math.random() > 0.3)
+    .slice(0, count)
+    .map(c => ({ ...c, date: new Date().toLocaleDateString('ru'), id: Date.now() + Math.random() }));
+
+  const existingNames = new Set(db.map(d => d.name.toLowerCase()));
+  const newItems = toAdd.filter(c => !existingNames.has(c.name.toLowerCase()));
+  db = [...newItems, ...db];
+  localStorage.setItem('pb_db', JSON.stringify(db));
+
+  renderDB();
+  updateStats();
+
+  const btn = document.getElementById('runBtn');
+  btn.classList.remove('running');
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Запустить сбор';
+  document.getElementById('progressWrap').classList.remove('show');
+  isRunning = false;
+
+  showToast(`✅ Добавлено ${newItems.length} контактов из ${categories.length} категорий`, 'success');
+  animateCounter('totalCount', db.length);
+}
+
+// ── RENDER DB ───────────────────────────────────────────
+function renderDB(items) {
+  const area = document.getElementById('dbArea');
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = items || db;
+  if (activeFilter !== 'all') filtered = filtered.filter(r => r.cat === activeFilter);
+  if (query) filtered = filtered.filter(r => r.name.toLowerCase().includes(query));
+
+  document.getElementById('dbCountLabel').textContent = filtered.length + ' записей';
+
+  area.innerHTML = filtered.length === 0
+    ? `<div style="text-align:center;padding:40px 20px;font-family:var(--mono);font-size:11px;color:var(--muted)">Нет данных.<br>Запустите сбор →</div>`
+    : filtered.map((r, i) => `
+      <div class="db-row" style="animation-delay:${i*0.03}s" onclick="showDetail(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+        <div>
+          <div class="row-name">${r.name}</div>
+          <div class="row-sub">${r.phone || r.email || r.source}</div>
+        </div>
+        <div class="row-cat">${r.cat}</div>
+        <div class="row-status">
+          <div class="status-dot ${r.email ? '' : 'no'}"></div>
+          <span class="status-txt">${r.email ? 'email' : 'нет'}</span>
+        </div>
+      </div>
+    `).join('');
+}
+
+function filterDB() { renderDB(); }
+function filterCat(cat, el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeFilter = cat;
+  renderDB();
+}
+
+// ── STATS ───────────────────────────────────────────────
+function updateStats() {
+  const cats = new Set(db.map(d => d.cat));
+  document.getElementById('totalCount').textContent = db.length;
+  document.getElementById('catCount').textContent = cats.size;
+  document.getElementById('emailCount').textContent = db.filter(d => d.email).length;
+  document.getElementById('phoneCount').textContent = db.filter(d => d.phone).length;
+}
+
+function animateCounter(id, target) {
+  const el = document.getElementById(id);
+  const start = parseInt(el.textContent) || 0;
+  const dur = 600;
+  const t0 = performance.now();
+  const tick = t => {
+    const p = Math.min((t - t0) / dur, 1);
+    el.textContent = Math.round(start + (target - start) * p);
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// ── DETAIL ──────────────────────────────────────────────
+function showDetail(r) {
+  showToast(`📋 ${r.name} | ${r.phone || '—'} | ${r.email || 'нет email'}`);
+}
+
+// ── EXPORT ──────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['Название','Категория','Телефон','Email','Источник','Дата']];
+  db.forEach(r => rows.push([r.name, r.cat, r.phone||'', r.email||'', r.source, r.date||'']));
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  download('prague_contacts.csv', csv, 'text/csv');
+  showToast('📥 CSV экспортирован', 'success');
+}
+
+function exportJSON() {
+  download('prague_contacts.json', JSON.stringify(db, null, 2), 'application/json');
+  showToast('📥 JSON экспортирован', 'success');
+}
+
+function download(filename, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type}));
+  a.download = filename; a.click();
+}
+
+function clearDB() {
+  if (!confirm('Очистить всю базу данных?')) return;
+  db = []; localStorage.removeItem('pb_db');
+  renderDB(); updateStats();
+  showToast('🗑 База очищена');
+}
+
+// ── TOAST ───────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── NAVIGATE ────────────────────────────────────────────
+function navigate(page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  showToast(`📍 ${page === 'maps' ? 'Google Maps' : page === 'db' ? 'База данных' : page}`);
+}
+
+function logout() {
+  sessionStorage.removeItem('pb_auth');
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>

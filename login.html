@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PragueBot — Вход</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #262624;
+    --surface:  #1e1e1c;
+    --panel:    #2e2e2b;
+    --border:   #3a3a36;
+    --accent:   #c8f05a;
+    --accent2:  #5af0c8;
+    --text:     #e8e6df;
+    --muted:    #7a7a72;
+    --danger:   #f05a5a;
+    --mono:     'Space Mono', monospace;
+    --sans:     'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,240,90,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,240,90,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift {
+    0%   { background-position: 0 0; }
+    100% { background-position: 48px 48px; }
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.12;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; animation-delay: 0s; }
+  .orb2 { width: 300px; height: 300px; background: var(--accent2); bottom: -80px; left: -80px; animation-delay: -4s; }
+  @keyframes float {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50%      { transform: translate(20px, -20px) scale(1.05); }
+  }
+
+  .login-wrap {
+    position: relative;
+    width: 420px;
+    animation: fadeUp 0.6s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(30px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .logo-area {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .logo-icon {
+    width: 56px; height: 56px;
+    background: var(--accent);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 0 40px rgba(200,240,90,0.3);
+  }
+  .logo-icon svg { width: 28px; height: 28px; }
+  .logo-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .logo-title span { color: var(--accent); }
+  .logo-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 40px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.5;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .field input {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200,240,90,0.1);
+  }
+  .field input::placeholder { color: var(--muted); }
+
+  .btn-login {
+    width: 100%;
+    background: var(--accent);
+    color: #1a1a18;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-login::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,240,90,0.3); }
+  .btn-login:hover::after { opacity: 0.05; }
+  .btn-login:active { transform: translateY(0); }
+
+  .error-msg {
+    background: rgba(240,90,90,0.1);
+    border: 1px solid rgba(240,90,90,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 16px;
+    display: none;
+    animation: shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  .hint {
+    text-align: center;
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .hint a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="login-wrap">
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a18" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+        <circle cx="12" cy="9" r="2.5"/>
+      </svg>
+    </div>
+    <div class="logo-title">Prague<span>Bot</span></div>
+    <div class="logo-sub">Contact Intelligence Platform</div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>Логин</label>
+      <input type="text" id="username" placeholder="введите логин" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Пароль</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Войти в систему</button>
+    <div class="error-msg" id="errMsg">⚠ Неверный логин или пароль</div>
+  </div>
+
+  <div class="hint">Нет доступа? Обратитесь к администратору</div>
+</div>
+
+<script>
+  // ── НАСТРОЙКИ ДОСТУПА ──────────────────────────────────
+  // Измените логин и пароль здесь:
+  const CREDENTIALS = {
+    username: "admin",
+    password: "prague2024"
+  };
+  // ───────────────────────────────────────────────────────
+
+  function doLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value;
+    const err = document.getElementById('errMsg');
+
+    if (u === CREDENTIALS.username && p === CREDENTIALS.password) {
+      sessionStorage.setItem('pb_auth', btoa(u + ':' + p));
+      window.location.href = 'dashboard.html';
+    } else {
+      err.style.display = 'block';
+      err.style.animation = 'none';
+      requestAnimationFrame(() => { err.style.animation = 'shake 0.3s ease'; });
+    }
+  }
+
+  // Enter key
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  // Check if already logged in
+  if (sessionStorage.getItem('pb_auth')) window.location.href = 'dashboard.html';
+</script>
+</body>
+</html>
