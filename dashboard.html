@@ -9,448 +9,459 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #262624;
-  --surface:  #1e1e1c;
-  --panel:    #2e2e2b;
-  --panel2:   #333330;
-  --border:   #3a3a36;
-  --border2:  #444440;
-  --accent:   #4d9fff;
-  --accent2:  #4a90e2;
-  --accent3:  #f0a85a;
-  --text:     #e8e6df;
-  --text2:    #b0ae a7;
-  --muted:    #6a6a62;
-  --danger:   #f05a5a;
-  --success:  #5af07a;
-  --mono:     'Space Mono', monospace;
-  --sans:     'Syne', sans-serif;
-  --sidebar-w: 64px;
-  --left-w:   340px;
-  --right-w:  320px;
+  --bg:      #262624;
+  --surface: #1e1e1c;
+  --panel:   #2a2a28;
+  --panel2:  #323230;
+  --border:  #3a3a36;
+  --border2: #484844;
+  --accent:  #4d9fff;
+  --accent2: #4a90e2;
+  --accent3: #f0a85a;
+  --text:    #e8e6df;
+  --muted:   #6a6a62;
+  --danger:  #f05a5a;
+  --success: #5af07a;
+  --mono:    'Space Mono', monospace;
+  --sans:    'Syne', sans-serif;
+  --left:    360px;
+  --right:   380px;
 }
+
+html, body { height: 100%; overflow: hidden; }
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
-  height: 100vh;
-  overflow: hidden;
   display: flex;
 }
 
-/* ── SIDEBAR NAV ─────────────────────────── */
+/* ─── SCROLLBAR ─────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ─── SIDEBAR ───────────────────────────── */
 .sidebar {
-  width: var(--sidebar-w);
+  width: 60px;
   background: var(--surface);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 0;
+  padding: 14px 0;
   flex-shrink: 0;
-  z-index: 100;
+  z-index: 50;
+  gap: 6px;
 }
 .logo-mark {
-  width: 38px; height: 38px;
+  width: 36px; height: 36px;
   background: var(--accent);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 28px;
-  box-shadow: 0 0 20px rgba(77,159,255,0.3);
+  margin-bottom: 18px;
+  box-shadow: 0 0 18px rgba(77,159,255,0.35);
+  flex-shrink: 0;
 }
-.logo-mark svg { width: 20px; height: 20px; }
-
-.nav-items { flex: 1; display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0 8px; }
+.logo-mark svg { width: 18px; height: 18px; }
 .nav-item {
-  width: 48px; height: 48px;
-  border-radius: 12px;
+  width: 42px; height: 42px;
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
   color: var(--muted);
   border: 1px solid transparent;
+  transition: all 0.15s;
+  position: relative;
+  flex-shrink: 0;
 }
 .nav-item:hover { background: var(--panel); color: var(--text); }
-.nav-item.active { background: rgba(77,159,255,0.12); color: var(--accent); border-color: rgba(77,159,255,0.2); }
-.nav-item svg { width: 20px; height: 20px; }
-.nav-tooltip {
-  position: absolute; left: 58px;
+.nav-item.active { background: rgba(77,159,255,0.12); color: var(--accent); border-color: rgba(77,159,255,0.25); }
+.nav-item svg { width: 18px; height: 18px; pointer-events: none; }
+.nav-tip {
+  position: absolute; left: 52px;
   background: var(--panel2); color: var(--text);
   padding: 5px 10px; border-radius: 6px;
-  font-family: var(--mono); font-size: 11px;
+  font-family: var(--mono); font-size: 10px;
   white-space: nowrap; pointer-events: none;
   opacity: 0; transition: opacity 0.15s;
-  border: 1px solid var(--border2);
-  z-index: 200;
+  border: 1px solid var(--border2); z-index: 200;
 }
-.nav-item:hover .nav-tooltip { opacity: 1; }
-
-.sidebar-bottom { padding: 8px; }
-.avatar {
-  width: 38px; height: 38px;
-  background: var(--panel2);
-  border-radius: 50%;
+.nav-item:hover .nav-tip { opacity: 1; }
+.sidebar-spacer { flex: 1; }
+.avatar-btn {
+  width: 36px; height: 36px;
+  background: var(--panel2); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  font-weight: 700; font-size: 14px;
-  color: var(--accent);
-  border: 1px solid var(--border2);
-  transition: all 0.2s;
+  cursor: pointer; font-weight: 700; font-size: 13px;
+  color: var(--accent); border: 1px solid var(--border2);
+  transition: all 0.15s; flex-shrink: 0;
 }
-.avatar:hover { border-color: var(--accent); }
+.avatar-btn:hover { border-color: var(--accent); }
 
-/* ── LEFT PANEL ──────────────────────────── */
+/* ─── LEFT PANEL ────────────────────────── */
 .left-panel {
-  width: var(--left-w);
+  width: var(--left);
   background: var(--surface);
   border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  overflow-y: auto;
+  display: flex; flex-direction: column;
+  flex-shrink: 0; overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
 }
-
-.panel-header {
-  padding: 20px 20px 16px;
+.p-head {
+  padding: 18px 18px 14px;
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0;
-  background: var(--surface);
-  z-index: 10;
+  background: var(--surface); z-index: 10;
 }
-.panel-title {
-  font-size: 13px; font-weight: 800;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: var(--text);
-}
-.panel-sub {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--muted); margin-top: 3px;
-}
+.p-title { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+.p-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
 
-/* Stats bar */
-.stats-bar {
+/* Stats */
+.stats-grid {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 8px; padding: 14px 16px;
   border-bottom: 1px solid var(--border);
 }
-.stat-box {
-  background: var(--panel);
-  border-radius: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
+.stat-card {
+  background: var(--panel); border-radius: 10px;
+  padding: 10px 12px; border: 1px solid var(--border);
 }
-.stat-val {
-  font-family: var(--mono); font-size: 20px;
-  font-weight: 700; color: var(--accent);
-  line-height: 1;
+.stat-num {
+  font-family: var(--mono); font-size: 22px; font-weight: 700;
+  color: var(--accent); line-height: 1;
 }
-.stat-lbl {
-  font-size: 10px; color: var(--muted);
-  margin-top: 4px; font-family: var(--mono);
-}
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 4px; font-family: var(--mono); }
 
-/* Settings sections */
-.settings-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-.sec-title {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--muted); letter-spacing: 1.5px;
-  text-transform: uppercase; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 6px;
+/* Section */
+.sec { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.sec-hd {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
 }
-.sec-title::after {
-  content: ''; flex: 1;
-  height: 1px; background: var(--border);
-}
+.sec-hd::after { content:''; flex:1; height:1px; background: var(--border); }
 
-/* Checkboxes */
-.check-group { display: flex; flex-direction: column; gap: 6px; }
-.check-item {
+/* Checkbox rows */
+.chk-list { display: flex; flex-direction: column; gap: 5px; }
+.chk-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-  border: 1px solid transparent;
+  padding: 8px 10px; border-radius: 8px;
+  cursor: pointer; border: 1px solid transparent;
+  transition: all 0.15s; user-select: none;
 }
-.check-item:hover { background: var(--panel); border-color: var(--border); }
-.check-item input[type="checkbox"] { display: none; }
-.check-box {
-  width: 16px; height: 16px;
-  border: 1.5px solid var(--border2);
-  border-radius: 4px;
+.chk-row:hover { background: var(--panel); border-color: var(--border); }
+.chk-box {
+  width: 16px; height: 16px; flex-shrink: 0;
+  border: 1.5px solid var(--border2); border-radius: 4px;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  font-size: 10px; font-weight: 900; color: #111;
   transition: all 0.15s;
 }
-.check-item input:checked ~ .check-label { color: var(--text); }
-.check-item input:checked ~ * .check-box,
-.check-item.checked .check-box {
-  background: var(--accent); border-color: var(--accent);
-}
-.check-item.checked .check-box::after {
-  content: '✓'; font-size: 10px; color: #1a1a18; font-weight: 900;
-}
-.check-label { font-size: 12px; color: var(--text); }
-.check-badge {
-  margin-left: auto;
+.chk-row.on .chk-box { background: var(--accent); border-color: var(--accent); }
+.chk-lbl { font-size: 12px; color: var(--text); flex: 1; }
+.badge {
   font-family: var(--mono); font-size: 9px;
-  padding: 2px 6px; border-radius: 4px;
-  background: var(--panel2); color: var(--muted);
+  padding: 2px 7px; border-radius: 4px;
 }
-.check-badge.live { background: rgba(90,240,122,0.1); color: var(--success); }
-.check-badge.beta { background: rgba(240,168,90,0.1); color: var(--accent3); }
+.badge.live { background: rgba(90,240,122,0.1); color: var(--success); }
+.badge.beta { background: rgba(240,168,90,0.1); color: var(--accent3); }
 
-/* Category selector */
-.category-grid {
-  display: flex; flex-wrap: wrap; gap: 6px;
-}
+/* Category tags */
+.cat-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
 .cat-tag {
-  padding: 5px 10px;
-  border-radius: 6px;
+  padding: 5px 10px; border-radius: 6px;
   font-family: var(--mono); font-size: 10px;
-  border: 1px solid var(--border2);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  user-select: none;
+  border: 1px solid var(--border2); color: var(--muted);
+  cursor: pointer; transition: all 0.15s; user-select: none;
 }
 .cat-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(77,159,255,0.05); }
-.cat-tag.selected { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
+.cat-tag.on { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
 
-/* Batch size */
-.batch-options { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+/* Batch */
+.batch-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
 .batch-btn {
-  padding: 8px 4px;
-  border-radius: 8px;
-  border: 1px solid var(--border2);
-  background: var(--panel);
-  color: var(--muted);
-  font-family: var(--mono); font-size: 10px;
-  cursor: pointer; text-align: center;
-  transition: all 0.15s;
+  padding: 9px 4px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--panel);
+  color: var(--muted); font-family: var(--mono); font-size: 10px;
+  cursor: pointer; text-align: center; transition: all 0.15s;
 }
 .batch-btn:hover { border-color: var(--accent); color: var(--accent); }
-.batch-btn.active { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
+.batch-btn.on { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
 
 /* Run button */
-.run-area { padding: 14px 16px 18px; }
+.run-wrap { padding: 14px 16px 18px; }
 .btn-run {
-  width: 100%;
-  background: var(--accent);
-  color: #1a1a18;
+  width: 100%; padding: 14px;
+  background: var(--accent); color: #0a0a0a;
   border: none; border-radius: 10px;
-  padding: 14px; cursor: pointer;
   font-family: var(--sans); font-size: 14px; font-weight: 800;
-  letter-spacing: 0.5px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s;
-  position: relative; overflow: hidden;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+  transition: all 0.2s; letter-spacing: 0.3px;
 }
-.btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(77,159,255,0.25); }
+.btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(77,159,255,0.3); }
 .btn-run:active { transform: translateY(0); }
-.btn-run.running { background: var(--panel2); color: var(--accent); border: 1px solid var(--accent); }
-.btn-run.running .run-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%; background: var(--accent);
-  animation: pulse 1s ease-in-out infinite;
+.btn-run.running {
+  background: transparent; color: var(--accent);
+  border: 1.5px solid var(--accent);
+  cursor: not-allowed;
 }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+.run-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
 /* Progress */
-.progress-wrap {
-  margin-top: 10px;
-  display: none;
-}
-.progress-wrap.show { display: block; }
-.progress-bar-bg {
-  height: 4px; background: var(--border);
-  border-radius: 2px; overflow: hidden;
-}
-.progress-bar-fill {
-  height: 100%; background: var(--accent);
-  border-radius: 2px; width: 0%;
-  transition: width 0.3s ease;
-}
-.progress-label {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--muted); margin-top: 6px;
-  text-align: center;
-}
+.progress-area { margin-top: 10px; display: none; }
+.progress-area.show { display: block; }
+.prog-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+.prog-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0; transition: width 0.4s ease; }
+.prog-lbl { font-family: var(--mono); font-size: 10px; color: var(--muted); text-align: center; }
 
-/* ── CENTER: MAP ─────────────────────────── */
-.center-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+/* ─── CENTER ─────────────────────────────── */
+.center {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
 }
-.map-header {
-  padding: 14px 20px;
+.center-top {
+  padding: 16px 24px 14px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.map-title { font-size: 13px; font-weight: 700; }
-.map-pill {
-  font-family: var(--mono); font-size: 9px;
-  padding: 3px 8px; border-radius: 4px;
-  background: rgba(77,159,255,0.1); color: var(--accent);
-  border: 1px solid rgba(77,159,255,0.2);
+.page-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+.page-title span { color: var(--accent); }
+.top-pills { display: flex; gap: 8px; }
+.pill {
+  font-family: var(--mono); font-size: 10px;
+  padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
 }
-.map-frame {
-  flex: 1;
-  position: relative;
-}
-.map-frame iframe {
-  width: 100%; height: 100%;
-  border: none; display: block;
-}
-.map-overlay {
-  position: absolute; inset: 0;
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgba(38,38,36,0.3) 0%, transparent 40%);
+.pill:hover { border-color: var(--accent); color: var(--accent); }
+.pill.active { background: rgba(77,159,255,0.1); border-color: var(--accent); color: var(--accent); }
+
+/* Main content area */
+.content-area {
+  flex: 1; overflow-y: auto; padding: 24px;
+  display: flex; flex-direction: column; gap: 20px;
 }
 
-/* ── RIGHT PANEL ─────────────────────────── */
+/* Welcome / Status block */
+.status-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px;
+  display: flex; align-items: center; gap: 20px;
+}
+.status-icon {
+  width: 56px; height: 56px; flex-shrink: 0;
+  background: rgba(77,159,255,0.1);
+  border: 1px solid rgba(77,159,255,0.2);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.status-icon svg { width: 26px; height: 26px; color: var(--accent); }
+.status-text h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+.status-text p { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.6; }
+.status-right { margin-left: auto; text-align: right; }
+.status-ready {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--success); display: flex; align-items: center; gap: 6px;
+}
+.dot-green { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: blink 2s infinite; }
+
+/* Run log */
+.log-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.log-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.log-head-title { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.btn-clear-log {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+}
+.btn-clear-log:hover { color: var(--danger); }
+.log-body {
+  padding: 14px 18px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--muted); min-height: 80px;
+  max-height: 200px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.log-line { display: flex; gap: 10px; align-items: flex-start; }
+.log-time { color: var(--border2); flex-shrink: 0; }
+.log-line.ok .log-msg { color: var(--success); }
+.log-line.err .log-msg { color: var(--danger); }
+.log-line.info .log-msg { color: var(--accent); }
+
+/* Quick stats row */
+.quick-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+.qs-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.qs-card:hover { border-color: var(--accent2); }
+.qs-num {
+  font-family: var(--mono); font-size: 28px; font-weight: 700;
+  color: var(--accent); line-height: 1;
+}
+.qs-lbl { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.qs-trend { font-family: var(--mono); font-size: 10px; color: var(--success); margin-top: 3px; }
+
+/* ─── RIGHT PANEL ────────────────────────── */
 .right-panel {
-  width: var(--right-w);
+  width: var(--right);
   background: var(--surface);
   border-left: 1px solid var(--border);
   display: flex; flex-direction: column;
   flex-shrink: 0;
 }
-
-/* Filter */
-.filter-area {
-  padding: 16px;
+.rp-head {
+  padding: 18px 18px 14px;
   border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
-.filter-title {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--muted); letter-spacing: 1.5px;
-  text-transform: uppercase; margin-bottom: 10px;
-}
-.search-input-wrap {
-  position: relative; margin-bottom: 10px;
-}
-.search-input-wrap svg {
-  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-  width: 14px; height: 14px; color: var(--muted);
-}
-.search-input {
-  width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px 9px 32px;
-  color: var(--text); font-family: var(--mono); font-size: 11px;
-  outline: none; transition: border-color 0.2s;
-}
-.search-input:focus { border-color: var(--accent); }
-.search-input::placeholder { color: var(--muted); }
+.rp-title { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.rp-count { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 
-.filter-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+/* Search + filter */
+.filter-zone { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.search-wrap { position: relative; margin-bottom: 10px; }
+.search-wrap svg {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 13px; height: 13px; color: var(--muted); pointer-events: none;
+}
+.search-in {
+  width: 100%; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px 9px 30px;
+  color: var(--text); font-family: var(--mono); font-size: 11px;
+  outline: none; transition: border-color 0.15s;
+}
+.search-in:focus { border-color: var(--accent); }
+.search-in::placeholder { color: var(--muted); }
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; }
 .chip {
   font-family: var(--mono); font-size: 9px;
-  padding: 4px 8px; border-radius: 5px;
+  padding: 4px 9px; border-radius: 5px;
   border: 1px solid var(--border2); color: var(--muted);
-  cursor: pointer; transition: all 0.15s;
+  cursor: pointer; transition: all 0.15s; user-select: none;
 }
-.chip:hover { border-color: var(--accent2); color: var(--accent2); }
-.chip.active { background: rgba(74,144,226,0.1); border-color: var(--accent2); color: var(--accent2); }
-.chip.all { border-color: var(--accent); color: var(--accent); background: rgba(77,159,255,0.08); }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.on { background: rgba(77,159,255,0.1); border-color: var(--accent); color: var(--accent); }
 
-/* DB Table */
-.db-area { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-.db-header-row {
-  display: grid; grid-template-columns: 1fr 90px 80px;
+/* DB table */
+.db-scroll { flex: 1; overflow-y: auto; }
+.db-col-head {
+  display: grid; grid-template-columns: 1fr 80px 60px;
   padding: 8px 16px;
-  font-family: var(--mono); font-size: 9px;
-  color: var(--muted); letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  letter-spacing: 1px; text-transform: uppercase;
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0;
-  background: var(--surface); z-index: 5;
+  position: sticky; top: 0; background: var(--surface); z-index: 5;
 }
 .db-row {
-  display: grid; grid-template-columns: 1fr 90px 80px;
-  padding: 9px 16px;
-  border-bottom: 1px solid rgba(58,58,54,0.5);
-  transition: background 0.15s;
-  cursor: pointer;
-  animation: rowIn 0.3s ease both;
+  display: grid; grid-template-columns: 1fr 80px 60px;
+  padding: 10px 16px; border-bottom: 1px solid rgba(58,58,54,0.5);
+  cursor: pointer; transition: background 0.12s;
+  animation: slideIn 0.25s ease both;
 }
-@keyframes rowIn {
-  from { opacity:0; transform: translateX(10px); }
-  to   { opacity:1; transform: translateX(0); }
-}
+@keyframes slideIn { from{opacity:0;transform:translateX(8px)} to{opacity:1;transform:none} }
 .db-row:hover { background: var(--panel); }
-.row-name {
-  font-size: 12px; font-weight: 600;
-  color: var(--text); overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
-}
-.row-sub {
-  font-family: var(--mono); font-size: 9px;
-  color: var(--muted); margin-top: 2px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.row-cat {
-  font-family: var(--mono); font-size: 9px;
-  color: var(--accent2);
-  display: flex; align-items: center;
-}
-.row-status {
-  display: flex; align-items: center; justify-content: flex-end;
-}
-.status-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%; background: var(--success);
-  margin-right: 5px;
-}
-.status-dot.no { background: var(--muted); }
-.status-txt { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+.row-name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row-detail { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row-cat { font-family: var(--mono); font-size: 9px; color: var(--accent2); display: flex; align-items: center; }
+.row-status { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+.s-dot.no { background: var(--border2); }
+.s-txt { font-family: var(--mono); font-size: 9px; color: var(--muted); }
 
-/* Export btn */
+/* Empty state */
+.db-empty {
+  text-align: center; padding: 40px 20px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  line-height: 2;
+}
+.db-empty svg { width: 36px; height: 36px; color: var(--border2); margin-bottom: 12px; }
+
+/* Export bar */
 .export-bar {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
+  padding: 12px 16px; border-top: 1px solid var(--border);
   display: flex; gap: 8px;
 }
-.btn-export {
-  flex: 1; padding: 9px;
-  border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--panel); color: var(--text);
-  font-family: var(--mono); font-size: 10px;
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+.btn-exp {
+  flex: 1; padding: 9px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--panel);
+  color: var(--text); font-family: var(--mono); font-size: 10px;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 5px; transition: all 0.15s;
 }
-.btn-export:hover { border-color: var(--accent); color: var(--accent); }
-.btn-export svg { width: 12px; height: 12px; }
+.btn-exp:hover { border-color: var(--accent); color: var(--accent); }
+.btn-exp.del { flex: 0; padding: 9px 12px; color: var(--muted); }
+.btn-exp.del:hover { color: var(--danger); border-color: var(--danger); }
+.btn-exp svg { width: 12px; height: 12px; pointer-events: none; }
+
+/* Modal */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-bg.show { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 28px; width: 480px;
+  transform: translateY(10px); transition: transform 0.2s;
+}
+.modal-bg.show .modal { transform: translateY(0); }
+.modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+.modal-row {
+  display: flex; justify-content: space-between;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.modal-row:last-of-type { border: none; }
+.modal-key { font-family: var(--mono); color: var(--muted); font-size: 10px; }
+.modal-val { color: var(--text); font-size: 12px; text-align: right; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+.modal-val a { color: var(--accent); text-decoration: none; }
+.modal-close {
+  margin-top: 18px; width: 100%; padding: 11px;
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text);
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.modal-close:hover { border-color: var(--accent); color: var(--accent); }
 
 /* Toast */
 .toast {
   position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
+  transform: translateX(-50%) translateY(12px);
   background: var(--panel2); color: var(--text);
   border: 1px solid var(--border2);
   padding: 10px 20px; border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-  opacity: 0; transition: all 0.3s;
+  font-family: var(--mono); font-size: 11px;
+  opacity: 0; transition: all 0.25s;
   pointer-events: none; z-index: 9999;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  max-width: 420px; text-align: center;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast.success { border-color: rgba(90,240,122,0.3); color: var(--success); }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toast.ok { border-color: rgba(90,240,122,0.35); color: var(--success); }
+.toast.err { border-color: rgba(240,90,90,0.35); color: var(--danger); }
 </style>
 </head>
 <body>
@@ -458,476 +469,528 @@ body {
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="logo-mark">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a18" stroke-width="2.5" stroke-linecap="round">
-      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-      <circle cx="12" cy="9" r="2.5"/>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.5" stroke-linecap="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
   </div>
-  <div class="nav-items">
-    <div class="nav-item active" onclick="navigate('maps')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-      <span class="nav-tooltip">Google Maps</span>
-    </div>
-    <div class="nav-item" onclick="navigate('db')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-      <span class="nav-tooltip">База данных</span>
-    </div>
-    <div class="nav-item" onclick="navigate('stats')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <span class="nav-tooltip">Статистика</span>
-    </div>
-    <div class="nav-item" onclick="navigate('settings')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-      <span class="nav-tooltip">Настройки</span>
-    </div>
+  <div class="nav-item active" onclick="setPage('home', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span class="nav-tip">Главная</span>
   </div>
-  <div class="sidebar-bottom">
-    <div class="avatar" onclick="logout()" title="Выйти">A</div>
+  <div class="nav-item" onclick="setPage('db', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+    <span class="nav-tip">База данных</span>
   </div>
+  <div class="nav-item" onclick="setPage('stats', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span class="nav-tip">Статистика</span>
+  </div>
+  <div class="sidebar-spacer"></div>
+  <div class="avatar-btn" onclick="logout()" title="Выйти">I</div>
 </nav>
 
-<!-- LEFT PANEL: Settings -->
+<!-- LEFT PANEL -->
 <div class="left-panel">
-  <div class="panel-header">
-    <div class="panel-title">Настройки сбора</div>
-    <div class="panel-sub">Конфигурация парсера</div>
+  <div class="p-head">
+    <div class="p-title">Настройки сбора</div>
+    <div class="p-sub">Конфигурация парсера</div>
   </div>
 
   <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat-box">
-      <div class="stat-val" id="totalCount">0</div>
-      <div class="stat-lbl">Контактов собрано</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="s-total">0</div>
+      <div class="stat-lbl">Контактов</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-val" id="catCount">0</div>
-      <div class="stat-lbl">Категорий охвачено</div>
+    <div class="stat-card">
+      <div class="stat-num" id="s-cats">0</div>
+      <div class="stat-lbl">Категорий</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-val" id="emailCount">0</div>
+    <div class="stat-card">
+      <div class="stat-num" id="s-email">0</div>
       <div class="stat-lbl">С email</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-val" id="phoneCount">0</div>
+    <div class="stat-card">
+      <div class="stat-num" id="s-phone">0</div>
       <div class="stat-lbl">С телефоном</div>
     </div>
   </div>
 
   <!-- Sources -->
-  <div class="settings-section">
-    <div class="sec-title">Источники данных</div>
-    <div class="check-group" id="sourceGroup">
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked name="source" value="gmaps">
-        <div class="check-box">✓</div>
-        <span class="check-label">Google Maps</span>
-        <span class="check-badge live">live</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked name="source" value="firmy">
-        <div class="check-box">✓</div>
-        <span class="check-label">Firmy.cz / Zlaté stránky</span>
-        <span class="check-badge live">live</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox" name="source" value="linkedin">
-        <div class="check-box"></div>
-        <span class="check-label">LinkedIn</span>
-        <span class="check-badge beta">beta</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked name="source" value="web">
-        <div class="check-box">✓</div>
-        <span class="check-label">Веб-скрапинг сайтов</span>
-        <span class="check-badge live">live</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox" name="source" value="facebook">
-        <div class="check-box"></div>
-        <span class="check-label">Facebook</span>
-        <span class="check-badge beta">beta</span>
-      </label>
+  <div class="sec">
+    <div class="sec-hd">Источники данных</div>
+    <div class="chk-list">
+      <div class="chk-row on" onclick="toggleRow(this)">
+        <div class="chk-box">✓</div><span class="chk-lbl">Google Maps</span>
+        <span class="badge live">live</span>
+      </div>
+      <div class="chk-row on" onclick="toggleRow(this)">
+        <div class="chk-box">✓</div><span class="chk-lbl">Firmy.cz / Zlaté stránky</span>
+        <span class="badge live">live</span>
+      </div>
+      <div class="chk-row" onclick="toggleRow(this)">
+        <div class="chk-box"></div><span class="chk-lbl">LinkedIn</span>
+        <span class="badge beta">beta</span>
+      </div>
+      <div class="chk-row on" onclick="toggleRow(this)">
+        <div class="chk-box">✓</div><span class="chk-lbl">Веб-скрапинг сайтов</span>
+        <span class="badge live">live</span>
+      </div>
+      <div class="chk-row" onclick="toggleRow(this)">
+        <div class="chk-box"></div><span class="chk-lbl">Facebook</span>
+        <span class="badge beta">beta</span>
+      </div>
     </div>
   </div>
 
-  <!-- Fields to collect -->
-  <div class="settings-section">
-    <div class="sec-title">Что собирать</div>
-    <div class="check-group">
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked><div class="check-box">✓</div>
-        <span class="check-label">Название фирмы</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked><div class="check-box">✓</div>
-        <span class="check-label">Телефон</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked><div class="check-box">✓</div>
-        <span class="check-label">Email</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked><div class="check-box">✓</div>
-        <span class="check-label">Адрес / Сайт</span>
-      </label>
-      <label class="check-item checked" onclick="toggleCheck(this)">
-        <input type="checkbox" checked><div class="check-box">✓</div>
-        <span class="check-label">Сфера деятельности</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox"><div class="check-box"></div>
-        <span class="check-label">Рейтинг Google</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox"><div class="check-box"></div>
-        <span class="check-label">Количество отзывов</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox"><div class="check-box"></div>
-        <span class="check-label">Часы работы</span>
-      </label>
-      <label class="check-item" onclick="toggleCheck(this)">
-        <input type="checkbox"><div class="check-box"></div>
-        <span class="check-label">Ссылка на соцсети</span>
-      </label>
+  <!-- Fields -->
+  <div class="sec">
+    <div class="sec-hd">Что собирать</div>
+    <div class="chk-list">
+      <div class="chk-row on" onclick="toggleRow(this)"><div class="chk-box">✓</div><span class="chk-lbl">Название фирмы</span></div>
+      <div class="chk-row on" onclick="toggleRow(this)"><div class="chk-box">✓</div><span class="chk-lbl">Телефон</span></div>
+      <div class="chk-row on" onclick="toggleRow(this)"><div class="chk-box">✓</div><span class="chk-lbl">Email</span></div>
+      <div class="chk-row on" onclick="toggleRow(this)"><div class="chk-box">✓</div><span class="chk-lbl">Адрес / Сайт</span></div>
+      <div class="chk-row on" onclick="toggleRow(this)"><div class="chk-box">✓</div><span class="chk-lbl">Сфера деятельности</span></div>
+      <div class="chk-row" onclick="toggleRow(this)"><div class="chk-box"></div><span class="chk-lbl">Рейтинг Google</span></div>
+      <div class="chk-row" onclick="toggleRow(this)"><div class="chk-box"></div><span class="chk-lbl">Количество отзывов</span></div>
+      <div class="chk-row" onclick="toggleRow(this)"><div class="chk-box"></div><span class="chk-lbl">Часы работы</span></div>
+      <div class="chk-row" onclick="toggleRow(this)"><div class="chk-box"></div><span class="chk-lbl">Ссылки на соцсети</span></div>
     </div>
   </div>
 
-  <!-- Category -->
-  <div class="settings-section">
-    <div class="sec-title">Категория бизнеса</div>
-    <div class="category-grid" id="catGrid">
-      <div class="cat-tag selected" onclick="toggleCat(this)">Рестораны</div>
-      <div class="cat-tag" onclick="toggleCat(this)">IT / Tech</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Строительство</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Маркетинг</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Бухгалтерия</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Недвижимость</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Юридические</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Транспорт</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Медицина</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Отели</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Фитнес</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Авто</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Красота</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Образование</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Туризм</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Финансы</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Страхование</div>
-      <div class="cat-tag" onclick="toggleCat(this)">Логистика</div>
+  <!-- Categories -->
+  <div class="sec">
+    <div class="sec-hd">Категория бизнеса</div>
+    <div class="cat-wrap">
+      <div class="cat-tag on" onclick="this.classList.toggle('on')">Рестораны</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">IT / Tech</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Строительство</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Маркетинг</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Бухгалтерия</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Недвижимость</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Юридические</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Транспорт</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Медицина</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Отели</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Фитнес</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Авто</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Красота</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Образование</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Туризм</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Финансы</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Страхование</div>
+      <div class="cat-tag" onclick="this.classList.toggle('on')">Логистика</div>
     </div>
   </div>
 
-  <!-- Batch size -->
-  <div class="settings-section">
-    <div class="sec-title">Контактов за итерацию</div>
-    <div class="batch-options">
-      <div class="batch-btn active" onclick="setBatch(this,'1-10')">1–10</div>
-      <div class="batch-btn" onclick="setBatch(this,'11-20')">11–20</div>
-      <div class="batch-btn" onclick="setBatch(this,'21-50')">21–50</div>
-      <div class="batch-btn" onclick="setBatch(this,'51-100')">51–100</div>
+  <!-- Batch -->
+  <div class="sec">
+    <div class="sec-hd">Контактов за итерацию</div>
+    <div class="batch-grid">
+      <div class="batch-btn on" onclick="pickBatch(this)">1–10</div>
+      <div class="batch-btn" onclick="pickBatch(this)">11–20</div>
+      <div class="batch-btn" onclick="pickBatch(this)">21–50</div>
+      <div class="batch-btn" onclick="pickBatch(this)">51–100</div>
     </div>
   </div>
 
   <!-- Run -->
-  <div class="run-area">
+  <div class="run-wrap">
     <button class="btn-run" id="runBtn" onclick="startRun()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="pointer-events:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       Запустить сбор
     </button>
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
-      <div class="progress-label" id="progressLabel">Инициализация...</div>
+    <div class="progress-area" id="progArea">
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-lbl" id="progLbl">Инициализация...</div>
     </div>
   </div>
 </div>
 
-<!-- CENTER: Map -->
-<div class="center-area">
-  <div class="map-header">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
-    <span class="map-title">Google Maps — Praha</span>
-    <span class="map-pill">🟢 Live</span>
+<!-- CENTER -->
+<div class="center">
+  <div class="center-top">
+    <div class="page-title">ICEBERG <span>OFFICE</span></div>
+    <div class="top-pills">
+      <div class="pill active" onclick="switchView('home',this)">Главная</div>
+      <div class="pill" onclick="switchView('log',this)">Лог сбора</div>
+    </div>
   </div>
-  <div class="map-frame">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d81969.04!2d14.3357!3d50.0755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b939c0970798b%3A0x400af0f6614b1b0!2sPraha%2C+Czechia!5e0!3m2!1sen!2s!4v1"
-      allowfullscreen loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-    <div class="map-overlay"></div>
+
+  <div class="content-area" id="contentArea">
+    <!-- Home view -->
+    <div id="view-home">
+      <div class="status-block">
+        <div class="status-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="status-text">
+          <h2>Система готова к сбору</h2>
+          <p>Выберите источники, категории и размер итерации.<br>Нажмите «Запустить сбор» для начала работы.</p>
+        </div>
+        <div class="status-right">
+          <div class="status-ready">
+            <div class="dot-green"></div>
+            Все системы онлайн
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-stats">
+        <div class="qs-card">
+          <div class="qs-num" id="qs-total">0</div>
+          <div class="qs-lbl">Всего контактов</div>
+          <div class="qs-trend" id="qs-trend">— записей сегодня</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-num" id="qs-cats">0</div>
+          <div class="qs-lbl">Категорий охвачено</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-num" id="qs-email">0</div>
+          <div class="qs-lbl">С email адресом</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-num" id="qs-phone">0</div>
+          <div class="qs-lbl">С телефоном</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log view -->
+    <div id="view-log" style="display:none">
+      <div class="log-block">
+        <div class="log-head">
+          <div class="log-head-title">Лог сбора данных</div>
+          <button class="btn-clear-log" onclick="clearLog()">Очистить</button>
+        </div>
+        <div class="log-body" id="logBody">
+          <div style="color:var(--border2);font-family:var(--mono);font-size:11px">// Лог пуст. Запустите сбор для начала работы.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- RIGHT PANEL: Database -->
+<!-- RIGHT PANEL -->
 <div class="right-panel">
-  <div class="panel-header">
-    <div class="panel-title">База данных</div>
-    <div class="panel-sub" id="dbCountLabel">0 записей</div>
+  <div class="rp-head">
+    <div class="rp-title">База данных</div>
+    <div class="rp-count" id="rp-count">0 записей</div>
   </div>
 
-  <div class="filter-area">
-    <div class="filter-title">Фильтр</div>
-    <div class="search-input-wrap">
+  <div class="filter-zone">
+    <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="search-input" id="searchInput" placeholder="Поиск по названию..." oninput="filterDB()">
+      <input class="search-in" id="searchIn" placeholder="Поиск по названию..." oninput="renderDB()">
     </div>
-    <div class="filter-chips" id="filterChips">
-      <div class="chip all active" onclick="filterCat('all', this)">Все</div>
-      <div class="chip" onclick="filterCat('Рестораны', this)">Рестораны</div>
-      <div class="chip" onclick="filterCat('IT / Tech', this)">IT</div>
-      <div class="chip" onclick="filterCat('Недвижимость', this)">Риелторы</div>
-      <div class="chip" onclick="filterCat('Медицина', this)">Медицина</div>
-      <div class="chip" onclick="filterCat('Строительство', this)">Стройка</div>
-      <div class="chip" onclick="filterCat('Маркетинг', this)">Маркетинг</div>
+    <div class="chip-row">
+      <div class="chip on" onclick="filterCat('all',this)">Все</div>
+      <div class="chip" onclick="filterCat('Рестораны',this)">Рестораны</div>
+      <div class="chip" onclick="filterCat('IT / Tech',this)">IT</div>
+      <div class="chip" onclick="filterCat('Недвижимость',this)">Риелторы</div>
+      <div class="chip" onclick="filterCat('Медицина',this)">Медицина</div>
+      <div class="chip" onclick="filterCat('Строительство',this)">Стройка</div>
+      <div class="chip" onclick="filterCat('Маркетинг',this)">Маркетинг</div>
     </div>
   </div>
 
-  <div class="db-header-row">
-    <div>Компания</div>
-    <div>Категория</div>
-    <div style="text-align:right">Данные</div>
+  <div class="db-col-head">
+    <div>Компания</div><div>Категория</div><div style="text-align:right">Email</div>
   </div>
 
-  <div class="db-area" id="dbArea">
-    <!-- Rows injected by JS -->
-  </div>
+  <div class="db-scroll" id="dbScroll"></div>
 
   <div class="export-bar">
-    <button class="btn-export" onclick="exportCSV()">
+    <button class="btn-exp" onclick="doExport('csv')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       CSV
     </button>
-    <button class="btn-export" onclick="exportJSON()">
+    <button class="btn-exp" onclick="doExport('json')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       JSON
     </button>
-    <button class="btn-export" onclick="clearDB()" style="flex:0;padding:9px 12px;color:var(--danger)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+    <button class="btn-exp del" onclick="askClear()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
     </button>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title" id="modalTitle">Детали компании</div>
+    <div id="modalBody"></div>
+    <button class="modal-close" onclick="closeModal()">Закрыть</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── AUTH CHECK ──────────────────────────────────────────
-if (!sessionStorage.getItem('pb_auth')) {
-  window.location.href = 'login.html';
-}
+// ── AUTH ───────────────────────────────────────────────────
+if (!sessionStorage.getItem('pb_auth')) window.location.href = 'login.html';
 
-// ── STATE ───────────────────────────────────────────────
-let db = JSON.parse(localStorage.getItem('pb_db') || '[]');
-let activeFilter = 'all';
-let isRunning = false;
-let batchSize = '1-10';
-const DEMO_COMPANIES = [
-  {name:"Café Savoy", cat:"Рестораны", phone:"+420 257 311 562", email:"info@cafesavoy.cz", source:"Google Maps"},
-  {name:"Avast Software", cat:"IT / Tech", phone:"+420 274 005 777", email:"pr@avast.com", source:"Google Maps"},
-  {name:"Rohlík.cz", cat:"IT / Tech", phone:"+420 800 300 000", email:"info@rohlik.cz", source:"Firmy.cz"},
-  {name:"Lokál Dlouhááá", cat:"Рестораны", phone:"+420 222 316 265", email:"dlouha@ambi.cz", source:"Google Maps"},
-  {name:"Hotel Aria", cat:"Отели", phone:"+420 225 334 111", email:"stay@aria.cz", source:"Google Maps"},
-  {name:"JUDr. Petr Svoboda", cat:"Юридические", phone:"+420 224 810 440", email:"office@ak-novak.cz", source:"Firmy.cz"},
-  {name:"Studio Hits Gym", cat:"Фитнес", phone:"+420 731 456 789", email:"gym@studiohits.cz", source:"Google Maps"},
-  {name:"Reality Centrum Praha", cat:"Недвижимость", phone:"+420 246 810 123", email:"info@reality-centrum.cz", source:"Firmy.cz"},
-  {name:"Stavby Praha a.s.", cat:"Строительство", phone:"+420 602 555 777", email:null, source:"Google Maps"},
-  {name:"Digital Marketing CZ", cat:"Маркетинг", phone:"+420 731 888 999", email:"hello@dmcz.cz", source:"Firmy.cz"},
+// ── STATE ──────────────────────────────────────────────────
+let db = JSON.parse(localStorage.getItem('io_db') || '[]');
+let activeCat = 'all';
+let running = false;
+let batchVal = '1-10';
+let todayAdded = 0;
+const TODAY = new Date().toLocaleDateString('ru');
+
+const SAMPLE = [
+  {name:"Café Savoy", cat:"Рестораны", phone:"+420 257 311 562", email:"info@cafesavoy.cz", site:"cafesavoy.cz", addr:"Vítězná 5, Praha 5", source:"Google Maps"},
+  {name:"Avast Software s.r.o.", cat:"IT / Tech", phone:"+420 274 005 777", email:"pr@avast.com", site:"avast.com", addr:"Pikrtova 1737, Praha 4", source:"Google Maps"},
+  {name:"Rohlík.cz", cat:"IT / Tech", phone:"+420 800 300 000", email:"info@rohlik.cz", site:"rohlik.cz", addr:"Radlická 3, Praha 5", source:"Firmy.cz"},
+  {name:"Lokál Dlouhááá", cat:"Рестораны", phone:"+420 222 316 265", email:"dlouha@ambi.cz", site:"lokal-dlouha.ambi.cz", addr:"Dlouhá 33, Praha 1", source:"Google Maps"},
+  {name:"Hotel Aria", cat:"Отели", phone:"+420 225 334 111", email:"stay@aria.cz", site:"ariahotel.net", addr:"Tržiště 9, Praha 1", source:"Google Maps"},
+  {name:"JUDr. Petr Svoboda", cat:"Юридические", phone:"+420 224 810 440", email:"office@ak-novak.cz", site:"ak-novak.cz", addr:"Václavské nám. 22, Praha 1", source:"Firmy.cz"},
+  {name:"Studio Hits Gym", cat:"Фитнес", phone:"+420 731 456 789", email:"gym@studiohits.cz", site:"studiohits.cz", addr:"Korunní 60, Praha 2", source:"Google Maps"},
+  {name:"Reality Centrum Praha", cat:"Недвижимость", phone:"+420 246 810 123", email:"info@reality-centrum.cz", site:"reality-centrum.cz", addr:"Vinohradská 12, Praha 2", source:"Firmy.cz"},
+  {name:"Stavby Praha a.s.", cat:"Строительство", phone:"+420 602 555 777", email:null, site:"stavbypraha.cz", addr:"Holešovice 23, Praha 7", source:"Google Maps"},
+  {name:"Digital Marketing CZ", cat:"Маркетинг", phone:"+420 731 888 999", email:"hello@dmcz.cz", site:"digitalmarketingcz.cz", addr:"Vinohrady 8, Praha 2", source:"Firmy.cz"},
 ];
 
-// ── INIT ────────────────────────────────────────────────
-window.onload = () => {
-  renderDB();
-  updateStats();
-};
+const LOG_STEPS = [
+  {t:'info', m:'Подключение к источникам данных...'},
+  {t:'info', m:'Инициализация Google Maps парсера...'},
+  {t:'ok',   m:'Google Maps: соединение установлено'},
+  {t:'info', m:'Поиск компаний по категории...'},
+  {t:'ok',   m:'Найдено карточек компаний'},
+  {t:'info', m:'Извлечение контактных данных...'},
+  {t:'info', m:'Поиск email на сайтах компаний...'},
+  {t:'info', m:'Проверка дублей в базе данных...'},
+  {t:'ok',   m:'Дедупликация завершена'},
+  {t:'ok',   m:'Данные сохранены в базу'},
+];
 
-// ── TOGGLE CHECKBOX ─────────────────────────────────────
-function toggleCheck(el) {
-  el.classList.toggle('checked');
-  const cb = el.querySelector('input');
-  const box = el.querySelector('.check-box');
-  if (el.classList.contains('checked')) {
-    cb.checked = true; box.textContent = '✓';
-  } else {
-    cb.checked = false; box.textContent = '';
-  }
+// ── INIT ───────────────────────────────────────────────────
+window.onload = () => { renderDB(); updateStats(); };
+
+// ── CHECKBOX TOGGLE ────────────────────────────────────────
+function toggleRow(el) {
+  el.classList.toggle('on');
+  const box = el.querySelector('.chk-box');
+  box.textContent = el.classList.contains('on') ? '✓' : '';
 }
 
-// ── TOGGLE CATEGORY TAG ─────────────────────────────────
-function toggleCat(el) { el.classList.toggle('selected'); }
-
-// ── BATCH SIZE ──────────────────────────────────────────
-function setBatch(el, val) {
-  document.querySelectorAll('.batch-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  batchSize = val;
+// ── BATCH ──────────────────────────────────────────────────
+function pickBatch(el) {
+  document.querySelectorAll('.batch-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  batchVal = el.textContent.trim();
 }
 
-// ── RUN ─────────────────────────────────────────────────
+// ── RUN ────────────────────────────────────────────────────
 function startRun() {
-  if (isRunning) return;
-  const selected = [...document.querySelectorAll('.cat-tag.selected')].map(t => t.textContent);
-  if (!selected.length) { showToast('⚠ Выберите хотя бы одну категорию'); return; }
+  if (running) return;
+  const cats = [...document.querySelectorAll('.cat-tag.on')].map(t => t.textContent.trim());
+  if (!cats.length) { toast('⚠ Выберите хотя бы одну категорию', 'err'); return; }
 
-  isRunning = true;
+  running = true;
   const btn = document.getElementById('runBtn');
   btn.classList.add('running');
   btn.innerHTML = '<span class="run-dot"></span> Сбор идёт...';
+  document.getElementById('progArea').classList.add('show');
 
-  const wrap = document.getElementById('progressWrap');
-  wrap.classList.add('show');
+  const maxStr = batchVal.split('–')[1] || batchVal.split('-')[1] || '10';
+  const max = parseInt(maxStr) || 10;
 
-  const max = parseInt(batchSize.split('-')[1]);
-  let progress = 0;
-  const steps = [
-    'Подключение к источникам...',
-    'Открытие Google Maps...',
-    'Поиск компаний...',
-    'Извлечение контактов...',
-    'Поиск email на сайтах...',
-    'Дедупликация записей...',
-    'Сохранение в базу данных...',
-    'Готово ✓',
-  ];
-  let stepI = 0;
+  let prog = 0, stepI = 0;
+  clearLog();
+  switchView('log', document.querySelector('.pill:last-child'));
 
-  const interval = setInterval(() => {
-    progress += Math.random() * 18 + 5;
-    if (progress >= 100) { progress = 100; clearInterval(interval); finishRun(selected, max); }
-    document.getElementById('progressFill').style.width = progress + '%';
-    document.getElementById('progressLabel').textContent = steps[Math.min(stepI++, steps.length-1)];
-  }, 600);
+  const iv = setInterval(() => {
+    prog += Math.random() * 15 + 4;
+    if (prog >= 100) { prog = 100; clearInterval(iv); finishRun(cats, max); }
+    document.getElementById('progFill').style.width = prog + '%';
+    document.getElementById('progLbl').textContent = LOG_STEPS[Math.min(stepI, LOG_STEPS.length-1)].m;
+
+    if (stepI < LOG_STEPS.length) {
+      const s = LOG_STEPS[stepI];
+      addLog(s.t, s.m);
+      stepI++;
+    }
+  }, 700);
 }
 
-function finishRun(categories, max) {
-  const count = Math.min(max, Math.floor(Math.random() * (max * 0.4)) + Math.ceil(max * 0.6));
-  const toAdd = DEMO_COMPANIES
-    .filter(c => Math.random() > 0.3)
+function finishRun(cats, max) {
+  const count = Math.max(1, Math.floor(Math.random() * max * 0.5) + Math.ceil(max * 0.5));
+  const existing = new Set(db.map(d => d.name.toLowerCase()));
+  const fresh = SAMPLE
+    .filter(() => Math.random() > 0.2)
     .slice(0, count)
-    .map(c => ({ ...c, date: new Date().toLocaleDateString('ru'), id: Date.now() + Math.random() }));
+    .filter(c => !existing.has(c.name.toLowerCase()))
+    .map(c => ({...c, date: TODAY, id: Date.now() + Math.random()}));
 
-  const existingNames = new Set(db.map(d => d.name.toLowerCase()));
-  const newItems = toAdd.filter(c => !existingNames.has(c.name.toLowerCase()));
-  db = [...newItems, ...db];
-  localStorage.setItem('pb_db', JSON.stringify(db));
+  db = [...fresh, ...db];
+  localStorage.setItem('io_db', JSON.stringify(db));
+  todayAdded += fresh.length;
 
-  renderDB();
-  updateStats();
+  renderDB(); updateStats();
+  addLog('ok', `✓ Добавлено ${fresh.length} новых контактов из ${cats.length} категорий`);
 
   const btn = document.getElementById('runBtn');
   btn.classList.remove('running');
-  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Запустить сбор';
-  document.getElementById('progressWrap').classList.remove('show');
-  isRunning = false;
+  btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="pointer-events:none"><polygon points="5 3 19 12 5 21 5 3"/></svg> Запустить сбор';
+  document.getElementById('progArea').classList.remove('show');
+  document.getElementById('progFill').style.width = '0%';
+  running = false;
 
-  showToast(`✅ Добавлено ${newItems.length} контактов из ${categories.length} категорий`, 'success');
-  animateCounter('totalCount', db.length);
+  toast(`✅ Добавлено ${fresh.length} контактов`, 'ok');
 }
 
-// ── RENDER DB ───────────────────────────────────────────
-function renderDB(items) {
-  const area = document.getElementById('dbArea');
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  let filtered = items || db;
-  if (activeFilter !== 'all') filtered = filtered.filter(r => r.cat === activeFilter);
-  if (query) filtered = filtered.filter(r => r.name.toLowerCase().includes(query));
+// ── LOG ────────────────────────────────────────────────────
+function addLog(type, msg) {
+  const lb = document.getElementById('logBody');
+  const now = new Date().toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const line = document.createElement('div');
+  line.className = `log-line ${type}`;
+  line.innerHTML = `<span class="log-time">${now}</span><span class="log-msg">${msg}</span>`;
+  lb.appendChild(line);
+  lb.scrollTop = lb.scrollHeight;
+}
+function clearLog() {
+  document.getElementById('logBody').innerHTML = '<div style="color:var(--border2);font-family:var(--mono);font-size:11px">// Лог очищен.</div>';
+}
 
-  document.getElementById('dbCountLabel').textContent = filtered.length + ' записей';
+// ── RENDER DB ──────────────────────────────────────────────
+function renderDB() {
+  const area = document.getElementById('dbScroll');
+  const q = document.getElementById('searchIn').value.toLowerCase();
+  let rows = db;
+  if (activeCat !== 'all') rows = rows.filter(r => r.cat === activeCat);
+  if (q) rows = rows.filter(r => r.name.toLowerCase().includes(q));
+  document.getElementById('rp-count').textContent = rows.length + ' записей';
 
-  area.innerHTML = filtered.length === 0
-    ? `<div style="text-align:center;padding:40px 20px;font-family:var(--mono);font-size:11px;color:var(--muted)">Нет данных.<br>Запустите сбор →</div>`
-    : filtered.map((r, i) => `
-      <div class="db-row" style="animation-delay:${i*0.03}s" onclick="showDetail(${JSON.stringify(r).replace(/"/g,'&quot;')})">
-        <div>
-          <div class="row-name">${r.name}</div>
-          <div class="row-sub">${r.phone || r.email || r.source}</div>
-        </div>
-        <div class="row-cat">${r.cat}</div>
-        <div class="row-status">
-          <div class="status-dot ${r.email ? '' : 'no'}"></div>
-          <span class="status-txt">${r.email ? 'email' : 'нет'}</span>
-        </div>
+  if (!rows.length) {
+    area.innerHTML = `<div class="db-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      База пуста.<br>Настройте параметры и<br>нажмите «Запустить сбор»
+    </div>`;
+    return;
+  }
+  area.innerHTML = rows.map((r, i) => `
+    <div class="db-row" style="animation-delay:${Math.min(i,20)*0.02}s" onclick='openModal(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
+      <div>
+        <div class="row-name">${esc(r.name)}</div>
+        <div class="row-detail">${esc(r.phone || r.addr || r.source || '')}</div>
       </div>
-    `).join('');
+      <div class="row-cat">${esc(r.cat)}</div>
+      <div class="row-status">
+        <div class="s-dot ${r.email ? '' : 'no'}"></div>
+        <span class="s-txt">${r.email ? 'да' : 'нет'}</span>
+      </div>
+    </div>`).join('');
 }
 
-function filterDB() { renderDB(); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function filterCat(cat, el) {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  activeFilter = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  activeCat = cat;
   renderDB();
 }
 
-// ── STATS ───────────────────────────────────────────────
+// ── STATS ──────────────────────────────────────────────────
 function updateStats() {
-  const cats = new Set(db.map(d => d.cat));
-  document.getElementById('totalCount').textContent = db.length;
-  document.getElementById('catCount').textContent = cats.size;
-  document.getElementById('emailCount').textContent = db.filter(d => d.email).length;
-  document.getElementById('phoneCount').textContent = db.filter(d => d.phone).length;
+  const cats = new Set(db.map(d => d.cat)).size;
+  const emails = db.filter(d => d.email).length;
+  const phones = db.filter(d => d.phone).length;
+  ['s-total','qs-total'].forEach(id => animNum(id, db.length));
+  ['s-cats','qs-cats'].forEach(id => animNum(id, cats));
+  ['s-email','qs-email'].forEach(id => animNum(id, emails));
+  ['s-phone','qs-phone'].forEach(id => animNum(id, phones));
+  document.getElementById('qs-trend').textContent = `+${todayAdded} записей сегодня`;
 }
 
-function animateCounter(id, target) {
+function animNum(id, target) {
   const el = document.getElementById(id);
-  const start = parseInt(el.textContent) || 0;
-  const dur = 600;
-  const t0 = performance.now();
-  const tick = t => {
-    const p = Math.min((t - t0) / dur, 1);
-    el.textContent = Math.round(start + (target - start) * p);
-    if (p < 1) requestAnimationFrame(tick);
+  if (!el) return;
+  const from = parseInt(el.textContent) || 0;
+  const dur = 500, t0 = performance.now();
+  const go = t => {
+    const p = Math.min((t-t0)/dur, 1);
+    el.textContent = Math.round(from + (target-from) * p);
+    if (p < 1) requestAnimationFrame(go);
   };
-  requestAnimationFrame(tick);
+  requestAnimationFrame(go);
 }
 
-// ── DETAIL ──────────────────────────────────────────────
-function showDetail(r) {
-  showToast(`📋 ${r.name} | ${r.phone || '—'} | ${r.email || 'нет email'}`);
+// ── MODAL ──────────────────────────────────────────────────
+function openModal(r) {
+  document.getElementById('modalTitle').textContent = r.name;
+  document.getElementById('modalBody').innerHTML = [
+    ['Категория', r.cat],
+    ['Телефон', r.phone || '—'],
+    ['Email', r.email ? `<a href="mailto:${r.email}">${r.email}</a>` : '—'],
+    ['Сайт', r.site ? `<a href="https://${r.site}" target="_blank">${r.site}</a>` : '—'],
+    ['Адрес', r.addr || '—'],
+    ['Источник', r.source || '—'],
+    ['Дата добавления', r.date || '—'],
+  ].map(([k,v]) => `<div class="modal-row"><span class="modal-key">${k}</span><span class="modal-val">${v}</span></div>`).join('');
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalBg'))
+    document.getElementById('modalBg').classList.remove('show');
 }
 
-// ── EXPORT ──────────────────────────────────────────────
-function exportCSV() {
-  const rows = [['Название','Категория','Телефон','Email','Источник','Дата']];
-  db.forEach(r => rows.push([r.name, r.cat, r.phone||'', r.email||'', r.source, r.date||'']));
-  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  download('iceberg_contacts.csv', csv, 'text/csv');
-  showToast('📥 CSV экспортирован', 'success');
+// ── EXPORT ─────────────────────────────────────────────────
+function doExport(fmt) {
+  if (!db.length) { toast('База данных пуста', 'err'); return; }
+  if (fmt === 'csv') {
+    const rows = [['Название','Категория','Телефон','Email','Сайт','Адрес','Источник','Дата']];
+    db.forEach(r => rows.push([r.name,r.cat,r.phone||'',r.email||'',r.site||'',r.addr||'',r.source||'',r.date||'']));
+    dl('iceberg_contacts.csv', rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n'), 'text/csv');
+    toast('📥 CSV экспортирован', 'ok');
+  } else {
+    dl('iceberg_contacts.json', JSON.stringify(db,null,2), 'application/json');
+    toast('📥 JSON экспортирован', 'ok');
+  }
 }
-
-function exportJSON() {
-  download('iceberg_contacts.json', JSON.stringify(db, null, 2), 'application/json');
-  showToast('📥 JSON экспортирован', 'success');
-}
-
-function download(filename, content, type) {
+function dl(name, content, type) {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content], {type}));
-  a.download = filename; a.click();
+  a.href = URL.createObjectURL(new Blob([content],{type}));
+  a.download = name; a.click();
+}
+function askClear() {
+  if (confirm('Очистить всю базу данных?')) {
+    db = []; todayAdded = 0;
+    localStorage.removeItem('io_db');
+    renderDB(); updateStats();
+    toast('🗑 База очищена');
+  }
 }
 
-function clearDB() {
-  if (!confirm('Очистить всю базу данных?')) return;
-  db = []; localStorage.removeItem('pb_db');
-  renderDB(); updateStats();
-  showToast('🗑 База очищена');
+// ── VIEWS ──────────────────────────────────────────────────
+function switchView(name, el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('view-home').style.display = name==='home' ? 'contents' : 'none';
+  document.getElementById('view-log').style.display  = name==='log'  ? 'block' : 'none';
 }
 
-// ── TOAST ───────────────────────────────────────────────
-function showToast(msg, type='') {
+function setPage(name, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg, type='') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.className = 'toast', 3000);
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className='toast', 3000);
 }
 
-// ── NAVIGATE ────────────────────────────────────────────
-function navigate(page) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  showToast(`📍 ${page === 'maps' ? 'Google Maps' : page === 'db' ? 'База данных' : page}`);
-}
-
+// ── LOGOUT ─────────────────────────────────────────────────
 function logout() {
   sessionStorage.removeItem('pb_auth');
   window.location.href = 'login.html';
