@@ -5,6 +5,9 @@ ICEBERG OFFICE — Python Backend Server
 Запуск: python server.py
 """
 import re, time, random, datetime, json, threading, os
+
+# Railway: tell Playwright where to find browsers
+os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH", "/root/.cache/ms-playwright")
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 
@@ -171,7 +174,14 @@ def scrape_google_maps(query, max_results=20):
     log(f"  Google Maps → '{query}'")
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--no-sandbox","--disable-dev-shm-usage","--disable-blink-features=AutomationControlled","--disable-gpu"])
+            # Try playwright chromium first, fallback to system chromium
+            launch_args = ["--no-sandbox","--disable-dev-shm-usage","--disable-blink-features=AutomationControlled","--disable-gpu","--disable-setuid-sandbox","--single-process"]
+            try:
+                browser = pw.chromium.launch(headless=True, args=launch_args)
+            except Exception:
+                import shutil
+                sys_chromium = shutil.which("chromium") or shutil.which("chromium-browser") or "/usr/bin/chromium"
+                browser = pw.chromium.launch(headless=True, executable_path=sys_chromium, args=launch_args)
             ctx = browser.new_context(viewport={"width":1366,"height":768}, user_agent=HEADERS["User-Agent"], locale="cs-CZ")
             page = ctx.new_page()
             page.add_init_script("Object.defineProperty(navigator,'webdriver',{get:()=>undefined})")

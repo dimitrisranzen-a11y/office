@@ -133,7 +133,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex
 .log-line.info .log-msg{color:var(--accent)}
 
 /* RIGHT PANEL */
-.right-panel{width:400px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.right-panel{width:480px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
 .rp-head{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .rp-title{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
 .rp-meta{font-family:var(--mono);font-size:10px;color:var(--muted)}
@@ -155,8 +155,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex
 
 /* DB table */
 .db-scroll{flex:1;overflow-y:auto}
-.db-col-head{display:grid;grid-template-columns:1fr 70px 50px 36px;gap:4px;padding:7px 14px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:5}
-.db-row{display:grid;grid-template-columns:1fr 70px 50px 36px;gap:4px;padding:9px 14px;border-bottom:1px solid rgba(58,58,54,.4);cursor:pointer;transition:background .12s;align-items:center;animation:rowIn .2s ease both}
+.db-col-head{display:grid;grid-template-columns:1.4fr 130px 150px 70px 44px 52px;gap:6px;padding:7px 14px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:5}
+.db-row{display:grid;grid-template-columns:1.4fr 130px 150px 70px 44px 52px;gap:6px;padding:9px 14px;border-bottom:1px solid rgba(58,58,54,.4);cursor:pointer;transition:background .12s;align-items:center;animation:rowIn .2s ease both}
 @keyframes rowIn{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:none}}
 .db-row:hover{background:var(--panel)}
 .row-name{font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -461,7 +461,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex
     </div>
   </div>
   <div class="db-col-head">
-    <div>Компания</div><div>Категория</div><div>Скор</div><div>Статус</div>
+    <div>Компания</div>
+    <div>Телефон</div>
+    <div>Email</div>
+    <div>Категория</div>
+    <div>Скор</div>
+    <div>Статус</div>
   </div>
   <div class="db-scroll" id="dbScroll"></div>
   <div class="export-bar">
