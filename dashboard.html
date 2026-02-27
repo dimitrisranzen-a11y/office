@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PragueBot — Dashboard</title>
+<title>ICEBERG OFFICE — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,8 +15,8 @@
   --panel2:   #333330;
   --border:   #3a3a36;
   --border2:  #444440;
-  --accent:   #c8f05a;
-  --accent2:  #5af0c8;
+  --accent:   #4d9fff;
+  --accent2:  #4a90e2;
   --accent3:  #f0a85a;
   --text:     #e8e6df;
   --text2:    #b0ae a7;
@@ -57,7 +57,7 @@ body {
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 28px;
-  box-shadow: 0 0 20px rgba(200,240,90,0.3);
+  box-shadow: 0 0 20px rgba(77,159,255,0.3);
 }
 .logo-mark svg { width: 20px; height: 20px; }
 
@@ -73,7 +73,7 @@ body {
   border: 1px solid transparent;
 }
 .nav-item:hover { background: var(--panel); color: var(--text); }
-.nav-item.active { background: rgba(200,240,90,0.12); color: var(--accent); border-color: rgba(200,240,90,0.2); }
+.nav-item.active { background: rgba(77,159,255,0.12); color: var(--accent); border-color: rgba(77,159,255,0.2); }
 .nav-item svg { width: 20px; height: 20px; }
 .nav-tooltip {
   position: absolute; left: 58px;
@@ -218,8 +218,8 @@ body {
   transition: all 0.15s;
   user-select: none;
 }
-.cat-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,90,0.05); }
-.cat-tag.selected { background: rgba(200,240,90,0.12); border-color: var(--accent); color: var(--accent); }
+.cat-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(77,159,255,0.05); }
+.cat-tag.selected { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
 
 /* Batch size */
 .batch-options { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
@@ -234,7 +234,7 @@ body {
   transition: all 0.15s;
 }
 .batch-btn:hover { border-color: var(--accent); color: var(--accent); }
-.batch-btn.active { background: rgba(200,240,90,0.12); border-color: var(--accent); color: var(--accent); }
+.batch-btn.active { background: rgba(77,159,255,0.12); border-color: var(--accent); color: var(--accent); }
 
 /* Run button */
 .run-area { padding: 14px 16px 18px; }
@@ -250,7 +250,7 @@ body {
   transition: all 0.2s;
   position: relative; overflow: hidden;
 }
-.btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,240,90,0.25); }
+.btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(77,159,255,0.25); }
 .btn-run:active { transform: translateY(0); }
 .btn-run.running { background: var(--panel2); color: var(--accent); border: 1px solid var(--accent); }
 .btn-run.running .run-dot {
@@ -298,8 +298,8 @@ body {
 .map-pill {
   font-family: var(--mono); font-size: 9px;
   padding: 3px 8px; border-radius: 4px;
-  background: rgba(200,240,90,0.1); color: var(--accent);
-  border: 1px solid rgba(200,240,90,0.2);
+  background: rgba(77,159,255,0.1); color: var(--accent);
+  border: 1px solid rgba(77,159,255,0.2);
 }
 .map-frame {
   flex: 1;
@@ -361,8 +361,8 @@ body {
   cursor: pointer; transition: all 0.15s;
 }
 .chip:hover { border-color: var(--accent2); color: var(--accent2); }
-.chip.active { background: rgba(90,240,200,0.1); border-color: var(--accent2); color: var(--accent2); }
-.chip.all { border-color: var(--accent); color: var(--accent); background: rgba(200,240,90,0.08); }
+.chip.active { background: rgba(74,144,226,0.1); border-color: var(--accent2); color: var(--accent2); }
+.chip.all { border-color: var(--accent); color: var(--accent); background: rgba(77,159,255,0.08); }
 
 /* DB Table */
 .db-area { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
@@ -890,12 +890,12 @@ function exportCSV() {
   const rows = [['Название','Категория','Телефон','Email','Источник','Дата']];
   db.forEach(r => rows.push([r.name, r.cat, r.phone||'', r.email||'', r.source, r.date||'']));
   const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  download('prague_contacts.csv', csv, 'text/csv');
+  download('iceberg_contacts.csv', csv, 'text/csv');
   showToast('📥 CSV экспортирован', 'success');
 }
 
 function exportJSON() {
-  download('prague_contacts.json', JSON.stringify(db, null, 2), 'application/json');
+  download('iceberg_contacts.json', JSON.stringify(db, null, 2), 'application/json');
   showToast('📥 JSON экспортирован', 'success');
 }
 

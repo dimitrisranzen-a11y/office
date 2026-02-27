@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PragueBot — Вход</title>
+<title>ICEBERG OFFICE — Вход</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,8 +13,8 @@
     --surface:  #1e1e1c;
     --panel:    #2e2e2b;
     --border:   #3a3a36;
-    --accent:   #c8f05a;
-    --accent2:  #5af0c8;
+    --accent:   #4d9fff;
+    --accent2:  #4a90e2;
     --text:     #e8e6df;
     --muted:    #7a7a72;
     --danger:   #f05a5a;
@@ -38,8 +38,8 @@
     content: '';
     position: fixed; inset: 0;
     background-image:
-      linear-gradient(rgba(200,240,90,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200,240,90,0.04) 1px, transparent 1px);
+      linear-gradient(rgba(77,159,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(77,159,255,0.04) 1px, transparent 1px);
     background-size: 48px 48px;
     pointer-events: none;
     animation: gridShift 20s linear infinite;
@@ -87,7 +87,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 16px;
-    box-shadow: 0 0 40px rgba(200,240,90,0.3);
+    box-shadow: 0 0 40px rgba(77,159,255,0.3);
   }
   .logo-icon svg { width: 28px; height: 28px; }
   .logo-title {
@@ -148,7 +148,7 @@
   }
   .field input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(200,240,90,0.1);
+    box-shadow: 0 0 0 3px rgba(77,159,255,0.1);
   }
   .field input::placeholder { color: var(--muted); }
 
@@ -177,7 +177,7 @@
     opacity: 0;
     transition: opacity 0.2s;
   }
-  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,240,90,0.3); }
+  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(77,159,255,0.3); }
   .btn-login:hover::after { opacity: 0.05; }
   .btn-login:active { transform: translateY(0); }
 
@@ -221,7 +221,7 @@
         <circle cx="12" cy="9" r="2.5"/>
       </svg>
     </div>
-    <div class="logo-title">Prague<span>Bot</span></div>
+    <div class="logo-title">ICEBERG <span>OFFICE</span></div>
     <div class="logo-sub">Contact Intelligence Platform</div>
   </div>
 
